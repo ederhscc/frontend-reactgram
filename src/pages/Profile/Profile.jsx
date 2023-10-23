@@ -18,6 +18,7 @@ import {
   publishPhoto,
   resetMessage,
   getUserPhotos,
+  deletePhoto,
 } from "../../slices/photoSlice.jsx";
 
 const Profile = () => {
@@ -27,15 +28,21 @@ const Profile = () => {
 
   const { user, loading } = useSelector((state) => state.user);
   const { user: userAuth } = useSelector((state) => state.auth);
+
   const {
     photos,
     loading: loadingPhoto,
-    message: messagePhoto,
     error: errorPhoto,
+    message: messagePhoto,
   } = useSelector((state) => state.photo);
 
-  const [title, setTitle] = useState("");
-  const [image, setImage] = useState("");
+  console.log("photos", photos)
+  const [title, setTitle] = useState();
+  const [image, setImage] = useState();
+
+  const [editId, setEditId] = useState();
+  const [editImage, setEditImage] = useState();
+  const [editTitle, setEditTitle] = useState();
 
   // New form and edit form refs
   const newPhotoForm = useRef();
@@ -47,16 +54,14 @@ const Profile = () => {
     dispatch(getUserPhotos(id));
   }, [dispatch, id]);
 
-  if (loading) {
-    return <p>Carregando...</p>;
+  // Reset component message
+  function resetComponentMessage() {
+    setTimeout(() => {
+      dispatch(resetMessage());
+    }, 2000);
   }
 
-  const handleFile = (e) => {
-    const image = e.target.files[0];
-
-    setImage(image);
-  };
-
+  // Publish a new photo
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -78,10 +83,26 @@ const Profile = () => {
 
     setTitle("");
 
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, 2000);
+    resetComponentMessage();
   };
+
+  // change image state
+  const handleFile = (e) => {
+    const image = e.target.files[0];
+
+    setImage(image);
+  };
+
+  // Exclude an photo
+  const handleDelete = (id) => {
+    dispatch(deletePhoto(id));
+
+    resetComponentMessage();
+  };
+
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
 
   return (
     <div id="profile">
@@ -140,7 +161,7 @@ const Profile = () => {
                       <BsFillEyeFill />
                     </Link>
                     <BsPencilFill />
-                    <BsXLg />
+                    <BsXLg onClick={() => handleDelete(photo._id)} />
                   </div>
                 ) : (
                   <Link className="btn" to={`/photos/${photo._id}`}>
@@ -149,7 +170,7 @@ const Profile = () => {
                 )}
               </div>
             ))}
-            {photos.length === 0 && <p>Ainda não há fotos publicadas</p>}
+          {photos.length === 0 && <p>Ainda não há fotos publicadas</p>}
         </div>
       </div>
     </div>
