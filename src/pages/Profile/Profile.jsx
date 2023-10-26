@@ -36,7 +36,6 @@ const Profile = () => {
     message: messagePhoto,
   } = useSelector((state) => state.photo);
 
-  console.log("photos", photos)
   const [title, setTitle] = useState();
   const [image, setImage] = useState();
 
@@ -55,7 +54,7 @@ const Profile = () => {
   }, [dispatch, id]);
 
   // Reset component message
-  function resetComponentMessage() {
+  const resetComponentMessage = () => {
     setTimeout(() => {
       dispatch(resetMessage());
     }, 2000);
