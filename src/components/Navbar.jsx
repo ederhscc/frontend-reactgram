@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // Redux
-import {logout, reset} from "../slices/authSlice.jsx";
+import { logout, reset } from "../slices/authSlice.jsx";
 
 const Navbar = () => {
   const { auth } = useAuth();
@@ -24,21 +24,36 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  const [query, setQuery] = useState("");
 
   const handleLogout = () => {
     dispatch(logout());
     dispatch(reset());
 
     navigate("/login");
-  }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (query) {
+      return navigate(`/search?q=${query}`);
+    }
+  };
 
   return (
     <nav id="nav">
       <Link to="/">ReactGram</Link>
-      <form id="search-form">
+      <form id="search-form" onSubmit={handleSearch}>
         <BsSearch />
-        <input type="text" placeholder="Pesquisar" />
+        <input
+          type="text"
+          placeholder="Pesquisar"
+          onChange={(e) => setQuery(e.target.value)}
+          value={query || ""}
+        />
       </form>
       <ul id="nav-links">
         {auth ? (
