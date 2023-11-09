@@ -4,6 +4,7 @@ import "./Search.css";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage.jsx";
+import { useQuery } from "../../hooks/useQuery.jsx";
 
 // components
 import LikeContainer from "../../components/LikeContainer.jsx";
